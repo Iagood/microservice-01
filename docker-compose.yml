@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  micro-01:
+    build:
+      args:
+        user: iago
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: laravel-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes: 
+      - ./:/var/www/
+    networks:
+      - microservices
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/:/etc/nginx/conf.d/
+    networks:
+      - microservices
+
+  db-micro-01:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    networks:
+      - microservices
+
+
+networks:
+  microservices:
+    driver: bridge
