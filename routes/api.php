@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CompanyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,4 +21,12 @@ Route::prefix('categories')->group(function () {
     Route::post('/', [CategoryController::class,'beforeStore']);
     Route::put('/{id}', [CategoryController::class,'beforeUpdate']);
     Route::delete('/{id}', [CategoryController::class,'destroy']);
+});
+
+Route::prefix('companies')->group(function () {
+    Route::get('/', [CompanyController::class,'index']);
+    Route::get('/{id}', [CompanyController::class,'show']);
+    Route::post('/', [CompanyController::class,'beforeStore']);
+    Route::put('/{id}', [CompanyController::class,'beforeUpdate']);
+    Route::delete('/{id}', [CompanyController::class,'destroy']);
 });

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreUpdateCategoryFormRequest extends FormRequest
+class StoreUpdateCompanyFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,13 +26,19 @@ class StoreUpdateCategoryFormRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'title'       => 'required|string|max:155|unique:categories,title',
-            'description' => 'required|string|max:255'
+            'category_id'  => 'required|exists:categories,id',
+            'name'         => 'required|unique:companies',
+            'whatsapp'     => 'required|unique:companies',
+            'email'        => 'required|unique:companies',
+            'phone'        => 'nullable|unique:companies',
         ];
 
         if(in_array($this->method(), ['PUT', 'PATCH'])) {
             $id = $this->route()->parameter('id');
-            $rules['title'] = 'required|string|max:155|unique:categories,title,'.$id;
+            $rules['name']     = 'required|unique:companies,name,'.$id;
+            $rules['whatsapp'] = 'required|unique:companies,whatsapp,'.$id;
+            $rules['email']    = 'required|unique:companies,email,'.$id;
+            $rules['phone']    = 'nullable|unique:companies,phone,'.$id;
         }
        return $rules;
     }
